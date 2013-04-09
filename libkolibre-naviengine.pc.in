@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @PACKAGE_NAME@
+Description: Engine for building and navigating a structure of nodes
+Requires:
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lkolibre-naviengine
+Cflags: -I${includedir}/libkolibre/naviengine-@PACKAGE_VERSION@
