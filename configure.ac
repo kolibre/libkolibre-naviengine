@@ -87,7 +87,6 @@ AC_TYPE_SIZE_T
 AC_CHECK_FUNCS([select])
 
 AC_CONFIG_FILES([libkolibre-naviengine.pc
-                 doxygen.cfg
                  Makefile
                  src/Makefile
                  src/Nodes/Makefile
