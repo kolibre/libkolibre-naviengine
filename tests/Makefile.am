@@ -18,14 +18,15 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-check_PROGRAMS = navigationtest selectbyuritest selectwithgetset openclosetest
+check_PROGRAMS = navigationtest selectbyuritest selectwithgetset openclosetest toptest
 
-TESTS = navigationtest selectbyuritest selectwithgetset openclosetest
+TESTS = navigationtest selectbyuritest selectwithgetset openclosetest toptest
 
 navigationtest_SOURCES = navigationtest.cpp
 selectbyuritest_SOURCES = selectbyuritest.cpp
 selectwithgetset_SOURCES = selectwithgetset.cpp
 openclosetest_SOURCES = openclosetest.cpp
+toptest_SOURCES = toptest.cpp
 
 LDADD = -lkolibre-naviengine
 AM_LDFLAGS = -L$(top_builddir)/src

@@ -43,7 +43,7 @@ int currentSibling(const AnyNode* node)
  * Constructor
  */
 NaviEngine::NaviEngine() :
-        good_(false)
+        good_(false), openOnChange_(true)
 {
 }
 
@@ -205,6 +205,7 @@ bool NaviEngine::top()
         menuStack.top().state.currentNode->onOpen(*this);
     }
 
+    openOnChange_ = false;
     // If not on top level, go to top level
     while (menuStack.size() > 1 || menu.state.currentNode != menu.menuModel)
     {
@@ -212,6 +213,13 @@ bool NaviEngine::top()
         up();
         menu = menuStack.top();
     }
+    openOnChange_ = true;
+
+    // We are now on top level, open the menu
+    narrate(menuStack.top().state.currentNode->play_before_onOpen_.c_str());
+    narrateShortPause();
+    menuStack.top().state.currentNode->onOpen(*this);
+
     return true;
 }
 
@@ -243,6 +251,10 @@ bool NaviEngine::openOnChange(const MenuState& before)
     MenuState& now = menuStack.top();
     if (now.state.currentNode == NULL)
         closeMenu();
+
+    // if openOnChange_ is false we do not want to open nodes when state changes
+    if (not openOnChange_)
+        return true;
 
     if (stateHasChanged(before))
     {

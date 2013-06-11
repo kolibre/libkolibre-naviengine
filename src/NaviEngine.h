@@ -127,6 +127,7 @@ private:
     bool openOnChange(const MenuState& before);
     std::stack<MenuState> menuStack;
     bool good_;
+    bool openOnChange_;
 };
 }
 #endif
