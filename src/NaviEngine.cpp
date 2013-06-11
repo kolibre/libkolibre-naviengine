@@ -244,17 +244,14 @@ bool NaviEngine::openOnChange(const MenuState& before)
     if (now.state.currentNode == NULL)
         closeMenu();
 
-    now = menuStack.top();
-    { // Check if the node has changed
-
-        if (now.state.currentNode != before.state.currentNode)
-        {
-            narrate(now.state.currentNode->play_before_onOpen_.c_str());
-            narrateShortPause();
-            good_ = now.state.currentNode->onOpen(*this);
-            narrateChange(before, now);
-            return good_;
-        }
+    if (stateHasChanged(before))
+    {
+        now = menuStack.top();
+        narrate(now.state.currentNode->play_before_onOpen_.c_str());
+        narrateShortPause();
+        good_ = now.state.currentNode->onOpen(*this);
+        narrateChange(before, now);
+        return good_;
     }
     return false;
 }
@@ -270,8 +267,6 @@ bool NaviEngine::up()
     MenuState before = menuStack.top();
     success = menuStack.top().state.currentNode->up(*this);
 
-    if (stateHasChanged(before))
-        return openOnChange(before);
     return openOnChange(before);
 }
 
@@ -286,8 +281,6 @@ bool NaviEngine::select()
     MenuState before = menuStack.top();
     success = menuStack.top().state.currentNode->select(*this);
 
-    if (stateHasChanged(before))
-        return openOnChange(before);
     return openOnChange(before);
 }
 
