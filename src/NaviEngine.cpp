@@ -93,13 +93,9 @@ bool NaviEngine::openMenu(AnyNode* node, bool narrable)
 
     if (narrable)
     {
-        if (not node->play_before_onOpen_.empty())
-        {
-            narrate(node->play_before_onOpen_.c_str());
-        }
-
-        good_ = node->onOpen(*this);
+        node->beforeOnOpen();
         narrateShortPause();
+        good_ = node->onOpen(*this);
         narrateChange(before, menuStack.top());
     }
 
@@ -200,7 +196,7 @@ bool NaviEngine::top()
     // If already on top level, open the menu
     if (menu.state.currentNode == menu.menuModel)
     {
-        narrate(menuStack.top().state.currentNode->play_before_onOpen_.c_str());
+        menuStack.top().state.currentNode->beforeOnOpen();
         narrateShortPause();
         menuStack.top().state.currentNode->onOpen(*this);
     }
@@ -216,7 +212,7 @@ bool NaviEngine::top()
     openOnChange_ = true;
 
     // We are now on top level, open the menu
-    narrate(menuStack.top().state.currentNode->play_before_onOpen_.c_str());
+    menuStack.top().state.currentNode->beforeOnOpen();
     narrateShortPause();
     menuStack.top().state.currentNode->onOpen(*this);
 
@@ -259,7 +255,7 @@ bool NaviEngine::openOnChange(const MenuState& before)
     if (stateHasChanged(before))
     {
         now = menuStack.top();
-        narrate(now.state.currentNode->play_before_onOpen_.c_str());
+        now.state.currentNode->beforeOnOpen();
         narrateShortPause();
         good_ = now.state.currentNode->onOpen(*this);
         narrateChange(before, now);
@@ -410,7 +406,7 @@ bool NaviEngine::process(int command, void* data)
             }
 
             MenuState& menu = menuStack.top();
-            narrate(menu.state.currentNode->play_before_onOpen_.c_str());
+            menu.state.currentNode->beforeOnOpen();
             narrateShortPause();
             good_ = menu.state.currentNode->onOpen(*this);
             // Consider a successful node change to mean that the command was processed.

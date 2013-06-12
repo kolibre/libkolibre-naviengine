@@ -49,6 +49,7 @@ public:
     bool selectByUri(NaviEngine& navi, std::string uri);
     bool menu(NaviEngine& navi);
     bool onOpen(NaviEngine& navi);
+    void beforeOnOpen();
     bool onNarrate();
     bool onRender();
     bool isVirtual();

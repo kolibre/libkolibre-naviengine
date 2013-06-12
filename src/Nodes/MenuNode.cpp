@@ -34,7 +34,6 @@ using namespace naviengine;
 MenuNode::MenuNode(const std::string& name)
 {
     name_ = name;
-    play_before_onOpen_ = "";
 
     std::ostringstream uri_from_anything;
     uri_from_anything << reinterpret_cast<long>(this);
@@ -180,6 +179,10 @@ bool MenuNode::menu(NaviEngine& navi)
 bool MenuNode::onOpen(NaviEngine& navi)
 {
     return true;
+}
+
+void MenuNode::beforeOnOpen()
+{
 }
 
 bool MenuNode::onNarrate()

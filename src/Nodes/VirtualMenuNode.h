@@ -72,6 +72,7 @@ public:
     bool prev(NaviEngine& navi);
     bool menu(NaviEngine& navi);
     bool onOpen(NaviEngine& navi);
+    void beforeOnOpen();
     bool onNarrate();
     bool onRender();
     bool isVirtual();
