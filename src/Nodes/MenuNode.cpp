@@ -185,6 +185,16 @@ void MenuNode::beforeOnOpen()
 {
 }
 
+bool MenuNode::narrateName()
+{
+    return false;
+}
+
+bool MenuNode::narrateInfo()
+{
+    return false;
+}
+
 bool MenuNode::onNarrate()
 {
     return false;

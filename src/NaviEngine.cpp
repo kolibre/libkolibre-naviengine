@@ -130,15 +130,15 @@ bool NaviEngine::closeMenu()
  * Invokes onNarrate for the current node
  *
  * If onNarrate returns false NaviEngine will render the node
- * with the help of it's virtual narrate functions
+ * with the help of it's virtual narrate functions and the nodes narrate methods
  */
 void NaviEngine::narrateNode()
 {
     MenuState& menu = menuStack.top();
     if (not menu.state.currentNode->onNarrate())
     {
-        narrate(menu.state.currentNode->name_.c_str());
-        narrate(menu.state.currentNode->info_.c_str());
+        if (not menu.state.currentNode->narrateName())
+            narrate(menu.state.currentNode->name_.c_str());
         narrateShortPause();
         narrateNode(menu.state.currentChoice);
     }
@@ -148,7 +148,7 @@ void NaviEngine::narrateNode()
  * Invoke onNarrate for a node
  *
  * If onNarrate returns false NaviEngine will render the node
- * with the help of it's virtual narrate functions
+ * with the help of it's virtual narrate functions and the nodes narrate methods
  *
  * @param choice A pointer the to choice to narrate
  */
@@ -159,11 +159,10 @@ void NaviEngine::narrateNode(AnyNode* node)
 
     if (not node->onNarrate())
     {
-        std::string name = node->name_;
-        if (name != "")
+        if (not node->narrateName())
         {
             narrate(currentSibling(node));
-            narrate(name.c_str());
+            narrate(node->name_.c_str());
             narrateLongPause();
         }
     }

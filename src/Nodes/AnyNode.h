@@ -113,6 +113,20 @@ public:
     virtual void beforeOnOpen() = 0;
 
     /**
+     * Let the node narrate its name
+     *
+     * @return true if narrated, false if NaviEngine should try to narrate it
+     */
+    virtual bool narrateName() = 0;
+
+    /**
+     * Let the node narrate its info
+     *
+     * @return true if narrated, false if NaviEngine should try to narrate it
+     */
+    virtual bool narrateInfo() = 0;
+
+    /**
      * Give the node a chance to narrate itself or to determine whether it needs narration.
      *
      * @return true if narrated, false if NaviEngine should try to narrate.

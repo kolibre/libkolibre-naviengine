@@ -50,6 +50,8 @@ public:
     bool menu(NaviEngine& navi);
     bool onOpen(NaviEngine& navi);
     void beforeOnOpen();
+    bool narrateName();
+    bool narrateInfo();
     bool onNarrate();
     bool onRender();
     bool isVirtual();

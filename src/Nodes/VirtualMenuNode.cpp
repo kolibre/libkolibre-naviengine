@@ -109,6 +109,16 @@ bool VirtualMenuNode::onNarrate()
     return false;
 }
 
+bool VirtualMenuNode::narrateName()
+{
+    return false;
+}
+
+bool VirtualMenuNode::narrateInfo()
+{
+    return false;
+}
+
 bool VirtualMenuNode::onRender()
 {
     return true;
