@@ -135,6 +135,15 @@ public:
      */
     virtual bool process(NaviEngine&, int command, void* data = 0) = 0;
 
+    /**
+     * Implement this method if the node is doing async work that needs
+     * to be aborted
+     *
+     * @return false if the operation failed
+     */
+    virtual bool abort() = 0;
+
+
 public:
     /** Pointer to the parent node */
     AnyNode* parent_;

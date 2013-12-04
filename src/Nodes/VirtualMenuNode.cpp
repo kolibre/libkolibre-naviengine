@@ -121,6 +121,11 @@ bool VirtualMenuNode::process(NaviEngine& navi, int command, void* data)
     return false;
 }
 
+bool VirtualMenuNode::abort()
+{
+    return true;
+}
+
 /**
  * Get number of children in this node.
  *
