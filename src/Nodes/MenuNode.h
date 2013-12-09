@@ -53,6 +53,7 @@ public:
     bool onRender();
     bool isVirtual();
     bool process(NaviEngine&, int command, void* data = 0);
+    bool abort();
 
     int numberOfChildren();
 
