@@ -43,7 +43,7 @@ int currentSibling(const AnyNode* node)
  * Constructor
  */
 NaviEngine::NaviEngine() :
-        good_(false)
+        good_(false), openOnChange_(true)
 {
 }
 
@@ -93,13 +93,9 @@ bool NaviEngine::openMenu(AnyNode* node, bool narrable)
 
     if (narrable)
     {
-        if (not node->play_before_onOpen_.empty())
-        {
-            narrate(node->play_before_onOpen_.c_str());
-        }
-
-        good_ = node->onOpen(*this);
+        node->beforeOnOpen();
         narrateShortPause();
+        good_ = node->onOpen(*this);
         narrateChange(before, menuStack.top());
     }
 
@@ -134,15 +130,15 @@ bool NaviEngine::closeMenu()
  * Invokes onNarrate for the current node
  *
  * If onNarrate returns false NaviEngine will render the node
- * with the help of it's virtual narrate functions
+ * with the help of it's virtual narrate functions and the nodes narrate methods
  */
 void NaviEngine::narrateNode()
 {
     MenuState& menu = menuStack.top();
     if (not menu.state.currentNode->onNarrate())
     {
-        narrate(menu.state.currentNode->name_.c_str());
-        narrate(menu.state.currentNode->info_.c_str());
+        if (not menu.state.currentNode->narrateName())
+            narrate(menu.state.currentNode->name_.c_str());
         narrateShortPause();
         narrateNode(menu.state.currentChoice);
     }
@@ -152,7 +148,7 @@ void NaviEngine::narrateNode()
  * Invoke onNarrate for a node
  *
  * If onNarrate returns false NaviEngine will render the node
- * with the help of it's virtual narrate functions
+ * with the help of it's virtual narrate functions and the nodes narrate methods
  *
  * @param choice A pointer the to choice to narrate
  */
@@ -163,11 +159,10 @@ void NaviEngine::narrateNode(AnyNode* node)
 
     if (not node->onNarrate())
     {
-        std::string name = node->name_;
-        if (name != "")
+        if (not node->narrateName())
         {
             narrate(currentSibling(node));
-            narrate(name.c_str());
+            narrate(node->name_.c_str());
             narrateLongPause();
         }
     }
@@ -200,11 +195,12 @@ bool NaviEngine::top()
     // If already on top level, open the menu
     if (menu.state.currentNode == menu.menuModel)
     {
-        narrate(menuStack.top().state.currentNode->play_before_onOpen_.c_str());
+        menuStack.top().state.currentNode->beforeOnOpen();
         narrateShortPause();
         menuStack.top().state.currentNode->onOpen(*this);
     }
 
+    openOnChange_ = false;
     // If not on top level, go to top level
     while (menuStack.size() > 1 || menu.state.currentNode != menu.menuModel)
     {
@@ -212,6 +208,13 @@ bool NaviEngine::top()
         up();
         menu = menuStack.top();
     }
+    openOnChange_ = true;
+
+    // We are now on top level, open the menu
+    menuStack.top().state.currentNode->beforeOnOpen();
+    narrateShortPause();
+    menuStack.top().state.currentNode->onOpen(*this);
+
     return true;
 }
 
@@ -244,17 +247,18 @@ bool NaviEngine::openOnChange(const MenuState& before)
     if (now.state.currentNode == NULL)
         closeMenu();
 
-    now = menuStack.top();
-    { // Check if the node has changed
+    // if openOnChange_ is false we do not want to open nodes when state changes
+    if (not openOnChange_)
+        return true;
 
-        if (now.state.currentNode != before.state.currentNode)
-        {
-            narrate(now.state.currentNode->play_before_onOpen_.c_str());
-            narrateShortPause();
-            good_ = now.state.currentNode->onOpen(*this);
-            narrateChange(before, now);
-            return good_;
-        }
+    if (stateHasChanged(before))
+    {
+        now = menuStack.top();
+        now.state.currentNode->beforeOnOpen();
+        narrateShortPause();
+        good_ = now.state.currentNode->onOpen(*this);
+        narrateChange(before, now);
+        return good_;
     }
     return false;
 }
@@ -270,8 +274,6 @@ bool NaviEngine::up()
     MenuState before = menuStack.top();
     success = menuStack.top().state.currentNode->up(*this);
 
-    if (stateHasChanged(before))
-        return openOnChange(before);
     return openOnChange(before);
 }
 
@@ -286,8 +288,6 @@ bool NaviEngine::select()
     MenuState before = menuStack.top();
     success = menuStack.top().state.currentNode->select(*this);
 
-    if (stateHasChanged(before))
-        return openOnChange(before);
     return openOnChange(before);
 }
 
@@ -405,7 +405,7 @@ bool NaviEngine::process(int command, void* data)
             }
 
             MenuState& menu = menuStack.top();
-            narrate(menu.state.currentNode->play_before_onOpen_.c_str());
+            menu.state.currentNode->beforeOnOpen();
             narrateShortPause();
             good_ = menu.state.currentNode->onOpen(*this);
             // Consider a successful node change to mean that the command was processed.

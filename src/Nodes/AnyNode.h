@@ -108,6 +108,25 @@ public:
     virtual bool onOpen(NaviEngine&) = 0;
 
     /**
+     * A place holder for logic that must be executed before onOpen in called
+     */
+    virtual void beforeOnOpen() = 0;
+
+    /**
+     * Let the node narrate its name
+     *
+     * @return true if narrated, false if NaviEngine should try to narrate it
+     */
+    virtual bool narrateName() = 0;
+
+    /**
+     * Let the node narrate its info
+     *
+     * @return true if narrated, false if NaviEngine should try to narrate it
+     */
+    virtual bool narrateInfo() = 0;
+
+    /**
      * Give the node a chance to narrate itself or to determine whether it needs narration.
      *
      * @return true if narrated, false if NaviEngine should try to narrate.
@@ -157,9 +176,6 @@ public:
     std::string info_;
     /** Variable holding the uri of this node */
     std::string uri_;
-
-    /** Special prompt to be narrated before onOpen */
-    std::string play_before_onOpen_;
 };
 }
 

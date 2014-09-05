@@ -32,7 +32,6 @@ using namespace naviengine;
 VirtualMenuNode::VirtualMenuNode(const std::string& name)
 {
     name_ = name;
-    play_before_onOpen_ = "opening";
 
     std::ostringstream uri_from_anything;
     uri_from_anything << reinterpret_cast<long>(this);
@@ -101,7 +100,21 @@ bool VirtualMenuNode::onOpen(NaviEngine& navi)
     return true;
 }
 
+void VirtualMenuNode::beforeOnOpen()
+{
+}
+
 bool VirtualMenuNode::onNarrate()
+{
+    return false;
+}
+
+bool VirtualMenuNode::narrateName()
+{
+    return false;
+}
+
+bool VirtualMenuNode::narrateInfo()
 {
     return false;
 }
