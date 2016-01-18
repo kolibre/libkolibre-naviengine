@@ -76,6 +76,3 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with libkolibre-naviengine. If not, see <http://www.gnu.org/licenses/>.
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/4ff3c92c51ae1b9dafc146f83227d490 "githalytics.com")](http://githalytics.com/kolibre/libkolibre-naviengine)
-
